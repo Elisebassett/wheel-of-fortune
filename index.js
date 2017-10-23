@@ -49,11 +49,11 @@ $(function () {
 				        <div class="row">
 				        	${col}
 				        	${col}
-				          <div class="col-1 grid" data-letter="a"><img src="imgs/wheel_logo.png"></div>
-				          <div class="col-1 grid" data-letter="p"><img src="imgs/wheel_logo.png"></div>
-				          <div class="col-1 grid" data-letter="p"><img src="imgs/wheel_logo.png"></div>
-				          <div class="col-1 grid" data-letter="l"><img src="imgs/wheel_logo.png"></div>
-				          <div class="col-1 grid" data-letter="e"><img src="imgs/wheel_logo.png"></div>
+				          <div class="col-1 grid" data-letter="A"><img src="imgs/wheel_logo.png"></div>
+				          <div class="col-1 grid" data-letter="P"><img src="imgs/wheel_logo.png"></div>
+				          <div class="col-1 grid" data-letter="P"><img src="imgs/wheel_logo.png"></div>
+				          <div class="col-1 grid" data-letter="L"><img src="imgs/wheel_logo.png"></div>
+				          <div class="col-1 grid" data-letter="E"><img src="imgs/wheel_logo.png"></div>
 				        	${col}
 				        	${col}
 				        	${col}
@@ -64,6 +64,41 @@ $(function () {
 				      	${end_row}
 				      </div> <!-- container --> 
 				`);//end game 0 append
+			}//if game 0
+			if (this.game_count === 1) {
+				$('#display').append(`
+					<div class="container">
+				        ${end_row}
+				        <div class="row">
+				        	${col}
+				        	${col}
+				          <div class="col-1 grid" data-letter="N"><img src="imgs/wheel_logo.png"></div>
+				          <div class="col-1 grid" data-letter="A"><img src="imgs/wheel_logo.png"></div>
+				          <div class="col-1 grid" data-letter="G"><img src="imgs/wheel_logo.png"></div>
+				          <div class="col-1 grid" data-letter="G"><img src="imgs/wheel_logo.png"></div>
+				          <div class="col-1 grid" data-letter="E"><img src="imgs/wheel_logo.png"></div>
+				          <div class="col-1 grid" data-letter="R"><img src="imgs/wheel_logo.png"></div>
+				        	${col}
+				        	${col}
+				        	${col}
+				        	${col}
+				        </div> <!-- row -->
+				        ${middle_row}
+				      	${end_row}
+				      </div> <!-- container --> 
+					`);//end game 1 append
+				}//if game 1
+				for (var i = 0; i < this.letterArray.length; i++) {
+					$('#keyboard').append(`
+						<div class="col">
+							<button type="button" class="btn btn-outline-info key" id="${this.letterArray[i]}" data-letter="${this.letterArray[i]}">${this.letterArray[i]}</button>
+						</div>
+					`);//keyboard append
+				} //for loop
+				$('#guessInput').append(`
+					<input type="text" id="guess" placeholder="Think you know what it is?">
+					<button id="submit_guess">Guess</button>
+				`);//guessInput
 				for (var i = 0; i < this.letterArray.length; i++) {
 					$('#keyboard').append(`
 						<div class="col">
@@ -76,8 +111,8 @@ $(function () {
 					<button id="submit_guess">Guess</button>
 				`);//guessInput
 			}//if game 0
-
 		}//letsPlay
+
 
 		guessLetter() {
 
@@ -112,7 +147,8 @@ $(function () {
 		// Cookies.set('gameCount', this.game_count + 1);
 	});
 	$(document).on('click', '.key', function(){
-
+		//make it so it compares stuff
+		console.log('hey, I work!');
 	});
 
 
