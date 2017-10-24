@@ -12,6 +12,7 @@ $(function () {
 			this.gameArray = this.wordArray[this.game_count];
 		}//constructor
 
+		///////////////////Functions//////////////////////////
 		letsPlay() { 
 			let col = `<div class="col-1 grid"><img src="imgs/wheel_logo.png"></div>`;
 			let end_row = `<div class="row">
@@ -43,6 +44,7 @@ $(function () {
 				          ${col}
 				        </div> <!-- row -->`;
 
+			////////////////Conditional Game Displays/////////////////////
 			if (this.game_count === 0) {
 				$('#display').append(`
 					<div class="container">
@@ -211,7 +213,7 @@ $(function () {
 			console.log(this.game_count);
 		}//nextWord
 
-}//Game
+	}//Game
 
 	var wheel = new Game();
 
@@ -239,8 +241,7 @@ $(function () {
 		wheel.letsPlay();
 	});
 
-
-
+	
 
 
 
