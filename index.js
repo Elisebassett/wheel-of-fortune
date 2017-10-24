@@ -6,14 +6,16 @@ $(function () {
 		constructor() {
 			this.wordArray = [['E','L','E','P','H','A','N','T','I','N','T','H','E','R','O','O','M'], ['N','A','G','G','E','R'],['O','B','S','T','E','P','E','R','O','U','S']];
 			this.word = null;
-			this.game_count = 0;
 			// this.game_count = parseInt(Cookies.get('gameCount'));
 			this.letterArray = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'];
-			this.gameArray = this.wordArray[this.game_count];
+			this.game_count = null;
 		}//constructor
 
 		///////////////////Functions//////////////////////////
 		letsPlay() { 
+			if (this.game_count === null) {
+				this.game_count = 0;
+			};
 			let col = `<div class="col-1 grid"><img src="imgs/wheel_logo.png"></div>`;
 			let end_row = `<div class="row">
 				          <div class="col-1 grid end"></div>
@@ -165,9 +167,8 @@ $(function () {
 			// 	prompt('would you like to buy a vowel?');
 			// }//if buy a vowel
 			
-			if ($.inArray(letter, this.gameArray) > -1) {
+			if ($.inArray(letter, this.wordArray[this.game_count]) > -1) {
 				$(`.${letter}`).html(letter);
-
 			} else {
 
 				alert('nope! go fish');
@@ -175,8 +176,7 @@ $(function () {
 			}//if else
 	
 			console.log(letter);
-
-			console.log(this.gameArray);			
+			console.log(this.wordArray[this.game_count]);		
 		}//guessLetter
 
 		checkGuess() {
