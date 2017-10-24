@@ -4,15 +4,21 @@ $(function () {
 	// }//if
 	class Game {
 		constructor() {
-			this.wordArray = [['E','L','E','P','H','A','N','T','I','N','T','H','E','R','O','O','M'], ['N','A','G','G','E','R'],['O','B','S','T','E','P','E','R','O','U','S']];
+			this.wordArray = [['E','L','E','P','H','A','N','T','I','N','T','H','E','R','O','O','M'], ['N','A','G','G','E','R'],['O','B','S','T','R','E','P','E','R','O','U','S']];
 			this.word = null;
 			// this.game_count = parseInt(Cookies.get('gameCount'));
 			this.letterArray = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'];
 			this.game_count = null;
+			this.gameArray = [];
+			this.goodGuessArray = [];
+			this.badGuessArray = [];
 		}//constructor
 
 		///////////////////Functions//////////////////////////
 		letsPlay() { 
+			this.gameArray = this.wordArray.shift();
+			console.log(this.gameArray);
+			console.log(this.wordArray);
 			if (this.game_count === null) {
 				this.game_count = 0;
 			};
@@ -47,6 +53,8 @@ $(function () {
 				        </div> <!-- row -->`;
 
 			////////////////Conditional Game Displays/////////////////////
+///HTML cleanup idea - put elephant in the room in a 2D array use that to separate and populate divs////
+
 			if (this.game_count === 0) {
 				$('#display').append(`
 					<div class="container">
@@ -124,7 +132,6 @@ $(function () {
 					<div class="container">
 				        ${end_row}
 				        <div class="row">
-				        	${col}
 				          <div class="col-1 grid O" data-letter="O" id="letter"></div>
 				          <div class="col-1 grid B" data-letter="B" id="letter"></div>
 				          <div class="col-1 grid S" data-letter="S" id="letter"></div>
@@ -167,29 +174,50 @@ $(function () {
 			// 	prompt('would you like to buy a vowel?');
 			// }//if buy a vowel
 			
-			if ($.inArray(letter, this.wordArray[this.game_count]) > -1) {
-				$(`.${letter}`).html(letter);
-			} else {
 
-				alert('nope! go fish');
+			if (this.checkArray === undefined) {
+				this.checkArray = this.gameArray;
+			}//set checkArray
 
-			}//if else
-	
-			console.log(letter);
-			console.log(this.wordArray[this.game_count]);		
+			if (this.checkArray.length > 0) {
+
+				if ($.inArray(letter, this.checkArray) > -1) {
+					$(`.${letter}`).html(letter);
+					this.checkArray = $.grep(this.checkArray, function (a) {
+						return a !== letter;
+					});
+
+				} else {
+
+					alert('nope! go fish');
+
+				}//if else gameplay
+			}//if game is still in play 
+
+			if (this.checkArray.length === 0) {
+				alert('WINNER WINNER CHICKEN DINNER!!!');
+				if (this.wordArray.length > 0) {
+					$('#keyboard').html(`
+						<button id='next'>Next Word!</button>
+					`);//display
+				}//nextgame if
+				$('#guessInput').html('');
+			}//game win
+			console.log(this.checkArray);		
 		}//guessLetter
 
 		checkGuess() {
 			let guess = $('#guess').val().toUpperCase().replace(/\s/g, '');
-			this.word = this.wordArray[this.game_count].join('');
+			this.word = this.gameArray.join('');
 			console.log(this.word);
 			// console.log(second_word);
 			if (this.word === guess) {
 				alert('You did the thing!');
-				$('#display').html(`
-					<button id='next'>Next Word!</button>
-				`);//display
-				$('#keyboard').html('');
+				if (this.wordArray.length > 0) {
+					$('#keyboard').html(`
+						<button id='next'>Next Word!</button>
+					`);//display
+				}//nextgame if
 				$('#guessInput').html('');
 			} else {
 				alert('nope');
@@ -209,8 +237,12 @@ $(function () {
 		}//hintGiver
 
 		nextWord() {
+			$('#display').html('');
+
 			this.game_count = this.game_count +1;
+			this.checkArray = undefined;
 			console.log(this.game_count);
+
 		}//nextWord
 
 	}//Game
@@ -240,10 +272,6 @@ $(function () {
 		wheel.nextWord();
 		wheel.letsPlay();
 	});
-
-	
-
-
 
 
 
