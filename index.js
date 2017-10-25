@@ -47,7 +47,7 @@ $(function () {
 				this.playerA = 1000;
 				this.playerB = 1000;
 			}//Game setter
-
+			$('#display').html('');
 			////////////////Conditional Game Displays/////////////////////
 ///HTML cleanup idea - put elephant in the room in a 2D array use that to separate and populate divs////
 
@@ -140,7 +140,7 @@ $(function () {
 			for (var i = 0; i < this.letterArray.length; i++) {
 				$('#keyboard').append(`
 					<div class="col">
-						<button type="button" class="btn btn-outline-info key" id="${this.letterArray[i]}" data-letter="${this.letterArray[i]}">${this.letterArray[i]}
+						<button type="button" class="btn btn-amber key" id="${this.letterArray[i]}" data-letter="${this.letterArray[i]}">${this.letterArray[i]}
 						</button>
 					</div>
 				`);//keyboard append
@@ -148,42 +148,40 @@ $(function () {
 			//Add Guess input and Hint button
 			$('#guessInput').append(`
 				<input type="text" id="guess" placeholder="Think you know what it is?">
-				<button id="submit_guess">Solve the puzzle</button>
-				<button id="hint_giver">Need a hint?</button>
+				<button id="submit_guess" class="btn btn-mdb btn-lrg">Solve the puzzle</button>
+				<button id="hint_giver" class="btn btn-pink btn lrg">Need a hint?</button>
 			    <p id="hint"></p>
 			`);//guessInput
-			//Add Player A
-			if (this.spinCount === null) {
-				$('#turn').html(`
-					<button id="coin">Flip me</button>
-				`);
-			} else {
-				$('#gamePlay').html(`
-					<button id="${this.spinner}" class="spinner">Spin The Wheel</button>
-					<div id="value" class="spinner">$${this.cash}</div>
-				`);//spinner	
-			}//spin setter
-
+			//Add Players
 			if (this.game_count === 0) {
 				this.nameA = prompt('What\'s your name?');
 				this.nameB = prompt('What\'s your name?');
 			}//customize
-
-			$('#player_a').html(`
-				<h3>${this.nameA}</h3>
-				<div id=score>
-					<div id="playerA">${this.playerA}</div>
+			$('#players').html(`
+				<div class="col-4" id="player_a">
+					<h3>${this.nameA}</h3>
+					<div id=score>
+						<div id="playerA">${this.playerA}</div>
+					</div>
 				</div>
-			`);//playerone display
-
-			//Add Player B
-			$('#player_b').html(`
-				<h3>${this.nameB}</h3>
-				<div id=score>
-					<div id="playerB">${this.playerB}</div>
-				</div>
-			`);//playerone display
-
+		        <div id="turn" class="col-4"></div>
+		        <div class="col-4" id="player_b">
+					<h3>${this.nameB}</h3>
+					<div id=score>
+						<div id="playerB">${this.playerB}</div>
+					</div>
+		        </div>
+			`);//player displays
+			if (this.spinCount === null) {
+				$('#turn').html(`
+					<button id="coin" class="btn btn-danger flipOutX">Flip me</button>
+				`);
+			} else {
+				$('#gamePlay').html(`
+					<button id="${this.spinner}" class="btn btn-success spinner">Spin The Wheel</button>
+					<div id="value" class="spinner">$${this.cash}</div>
+				`);//spinner	
+			}//spin setter
 		}//letsPlay
 
 
@@ -258,7 +256,9 @@ $(function () {
 						}//Player A Wins!
 						if (this.wordArray.length > 0) {
 							$('#keyboard').html(`
-								<button id='next'>Next Word!</button>
+								<div class="col">
+								<button id='next' class="btn btn-amber">Next Word!</button>
+								<div>
 							`);//display
 						}//nextgame if
 						if (this.wordArray.length === 0) {
@@ -296,7 +296,9 @@ $(function () {
 					}//Player A Wins!
 					if (this.wordArray.length > 0) {
 						$('#keyboard').html(`
-							<button id='next'>Next Word!</button>
+							<div class="col">
+								<button id='next' class="btn btn-amber">Next Word!</button>
+								<div>
 						`);//display
 					}//nextgame if
 					if (this.wordArray.length === 0) {
@@ -318,7 +320,7 @@ $(function () {
 		hintGiver() {
 		/////turn into an array
 			if (this.game_count === 0) {
-				$('#hint').html('Easily seen, easily ignored.');
+				$('#hint').html('<h5 class="h5-responsive hint">Easily seen, easily ignored.</h5>');
 			}//if game 0
 			if (this.game_count === 1) {
 				$('#hint').html('Are you a fan of South Park?');
@@ -333,7 +335,7 @@ $(function () {
 			$('#guessInput').html('');
 			this.game_count = this.game_count +1;
 			this.checkArray = undefined;
-
+			console.log(this.spinCount);
 		}//nextWord
 
 		getValue() {
@@ -361,14 +363,13 @@ $(function () {
 			let spinnerArray = ['a_spinner', 'b_spinner'];
 			let spinner = spinnerArray[Math.floor(Math.random()*spinnerArray.length)];
 			this.spinner = spinner;
-			console.log(spinner);
 			if (spinner === 'a_spinner') {
 				$('#turn').html(`${this.nameA} goes first!`);
 			} else {
 				$('#turn').html(`${this.nameB} goes first!`);
 			}//alert
 			$('#gamePlay').html(`
-				<button id="${this.spinner}" class="spinner">Spin The Wheel</button>
+				<button id="${this.spinner}" class="btn btn-success spinner">Spin The Wheel</button>
 				<div id="value" class="spinner">$${this.cash}</div>
 			`);//spinner
 		}//coin Flip
