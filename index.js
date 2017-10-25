@@ -1,46 +1,48 @@
 $(function () {
-	if (Cookies.get('playerA') === undefined) {
-		Cookies.set('playerA', 1000);
-	}//if PlayerA
-	if (Cookies.get('playerB') === undefined) {
-		Cookies.set('playerB', 1000);
-	}//if PlayerA
+
 	class Game {
 		constructor() {
 			///turn into an array of words hint: split()
 			this.wordArray = [['E','L','E','P','H','A','N','T','I','N','T','H','E','R','O','O','M'], ['N','A','G','G','E','R'],['O','B','S','T','R','E','P','E','R','O','U','S']];
 			this.word = null;
-			// this.game_count = parseInt(Cookies.get('gameCount'));
 			this.letterArray = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'];
 			this.game_count = null;
 			this.gameArray = [];
-			this.winCount ;
-			this.failCount ;
-			this.playerA = Cookies.get('playerA');
-			this.playerB = Cookies.get('playerB');
-
-
-
+			this.failCountA ;
+			this.failCountB ;
+			this.playerA ;
+			this.playerB ;
+			this.spinCount = null;
 		}//constructor
+
+
+		///////////////////In Object Functions/////////////////
 
 		///////////////////Functions//////////////////////////
 		letsPlay() { 
+			////////////Variables///////////
 			this.gameArray = this.wordArray.shift();
+			let col = `<div class="col-1 grid"><img src="imgs/wheel_logo.png"></div>`;
+			let end_row = `
+				<div class="row">
+		          <div class="col-1 grid end"></div>
+		          ${col} ${col} ${col} ${col} ${col} ${col} ${col} ${col} ${col} ${col}
+		          <div class="col-1 grid end"></div>
+		        </div> <!-- row -->
+	        `;//end row
+			let middle_row = `
+				<div class="row">
+		          ${col} ${col} ${col} ${col} ${col} ${col} ${col} ${col} ${col} ${col} ${col} ${col}
+		        </div> <!-- row -->
+		     `;//middle row
+
+	     	//////////////Game Setter//////////////
 			if (this.game_count === null) {
 				this.game_count = 0;
-			};
-			if (this.cash === undefined){
 				this.cash = 0;
-			}
-			let col = `<div class="col-1 grid"><img src="imgs/wheel_logo.png"></div>`;
-			let end_row = `<div class="row">
-				          <div class="col-1 grid end"></div>
-				          ${col} ${col} ${col} ${col} ${col} ${col} ${col} ${col} ${col} ${col}
-				          <div class="col-1 grid end"></div>
-				        </div> <!-- row -->`;
-			let middle_row = `<div class="row">
-				          ${col} ${col} ${col} ${col} ${col} ${col} ${col} ${col} ${col} ${col} ${col} ${col}
-				        </div> <!-- row -->`;
+				this.playerA = 1000;
+				this.playerB = 1000;
+			}//Game setter
 
 			////////////////Conditional Game Displays/////////////////////
 ///HTML cleanup idea - put elephant in the room in a 2D array use that to separate and populate divs////
@@ -142,27 +144,31 @@ $(function () {
 			//Add Guess input and Hint button
 			$('#guessInput').append(`
 				<input type="text" id="guess" placeholder="Think you know what it is?">
-				<button id="submit_guess">Guess</button>
+				<button id="submit_guess">Solve the puzzle</button>
 				<button id="hint_giver">Need a hint?</button>
 			    <p id="hint"></p>
 			`);//guessInput
 			//Add Player A
-			
-			$('#gamePlay').html(`
-				<button id="${this.spinner}">Spin The Wheel</button>
-				<div id="a_value" class="spinner">${this.cash}</div>
+			if (this.spinCount === null) {
+				$('#turn').html(`
+					<button id="coin">Flip me</button>
+				`);
+			} else {
+				$('#gamePlay').html(`
+					<button id="${this.spinner}" class="spinner">Spin The Wheel</button>
+					<div id="value" class="spinner">$${this.cash}</div>
+				`);//spinner	
+			}//spin setter
 
-			`);//spinner
-
-			// if (this.game_count === 0) {
-			// 	this.nameA = prompt('What\'s your name?');
-			// 	this.nameB = prompt('What\'s your name?');
-			// }//customize
+			if (this.game_count === 0) {
+				this.nameA = prompt('What\'s your name?');
+				this.nameB = prompt('What\'s your name?');
+			}//customize
 
 			$('#player_a').html(`
 				<h3>${this.nameA}</h3>
 				<div id=score>
-					<div>${this.playerA}</div>
+					<div id="playerA">${this.playerA}</div>
 				</div>
 			`);//playerone display
 
@@ -170,13 +176,10 @@ $(function () {
 			$('#player_b').html(`
 				<h3>${this.nameB}</h3>
 				<div id=score>
-					<div>${this.playerB}</div>
+					<div id="playerB">${this.playerB}</div>
 				</div>
 			`);//playerone display
 
-			$('#b_spinner').html(`
-				<div id="b_value" class="spinner">${this.cash}</div>
-			`);//spinner
 		}//letsPlay
 
 
@@ -189,20 +192,48 @@ $(function () {
 			}//set checkArray
 
 			if (this.checkArray.length > 0) {
-
+				//if correct
+				let letterCount = [];
 				if ($.inArray(letter, this.checkArray) > -1) {
 					$(`.${letter}`).html(letter);
 					this.checkArray = $.grep(this.checkArray, function (a) {
 						return a !== letter;
 					});
-
-				} else {
-
-					alert('nope! go fish');
-
+					// letterCount = this.gameArray.filter(function(e){
+					// 	e === letter});
+					// console.log(letterCount);
+					// console.log(letterCount.length);
+					if (this.spinner === 'a_spinner') {
+						this.playerA = this.playerA + this.cash;
+						// this.playerA', this.playerA + this.cash*letterCount.length);
+						$('#playerA').html(this.playerA);
+					}
+					if (this.spinner === 'b_spinner'){
+						this.playerB = this.playerB + this.cash;
+						// this.playerB', this.playerB + this.cash*letterCount.length);
+						$('#playerB').html(this.playerB);
+					}//award money
+				} //if Correct
+				///else incorrect
+				else {
+					if (this.spinner === 'a_spinner') {
+						this.spinner = 'b_spinner';
+						alert(`Nope! It\'s ${this.nameB}/'s turn`);
+						this.failCountA = this.failCountA +1;
+						this.playerA = this.playerA - this.cash;
+						$('#playerA').html(this.playerA);
+						$('#turn').html(`${this.nameB}/'s turn`);
+					}
+					if (this.spinner === 'b_spinner'){
+						this.spinner = 'a_spinner';
+						alert(`Nope! It\'s ${this.nameA}/'s turn`);
+						this.failCountB = this.failCountB +1;
+						this.playerB = this.playerB - this.cash;
+						$('#playerB').html(this.playerB);
+						$('#turn').html(`${this.nameA}/'s turn`);
+					}//turn change
 				}//if else gameplay
 			}//if game is still in play 
-
 			if (this.checkArray.length === 0) {
 				alert('WINNER WINNER CHICKEN DINNER!!!');
 				if (this.wordArray.length > 0) {
@@ -211,7 +242,9 @@ $(function () {
 					`);//display
 				}//nextgame if
 				$('#guessInput').html('');
-			}//game win		
+			}//game win	
+
+
 		}//guessLetter
 
 		checkGuess() {
@@ -256,23 +289,36 @@ $(function () {
 		spinWheel() {
 	        this.cashValues = [5000, 600, 500, 300, 500, 800, 550, 400, 300, 900, 500, 300, 900, 0, 600, 400, 300, -2, 800, 350, 450, 700, 300, 600, 'Bankrupt'];
 			this.cash = this.cashValues[Math.floor(Math.random()*this.cashValues.length)];
+			console.log(this.cash);
+			$('#value').html(`$${this.cash}`);
 		}//spin the wheel
 	
 		aSpinner() {
 			if (this.cash === 'Bankrupt') {
-				Cookies.set('playerA', 0);
-			} else {
-				Cookies.set('playerA', this.playerA + this.cash);
-			}//bankrupt if else
+				this.playerA = 0;
+			}//bankrupt if
 		}//a spinner
 	
 		bSpinner() {
 			if (this.cash === 'Bankrupt') {
-				Cookies.set('playerB', 0);
-			} else {
-				Cookies.set('playerB', this.playerB + this.cash);
-			}//bankrupt if else
+				this.playerB = 0;
+			}//bankrupt if
 		}//b spinner
+		coinFlip() {
+			let spinnerArray = ['a_spinner', 'b_spinner'];
+			let spinner = spinnerArray[Math.floor(Math.random()*spinnerArray.length)];
+			this.spinner = spinner;
+			console.log(spinner);
+			if (spinner === 'a_spinner') {
+				$('#turn').html(`${this.nameA} goes first!`);
+			} else {
+				$('#turn').html(`${this.nameB} goes first!`);
+			}//alert
+			$('#gamePlay').html(`
+				<button id="${this.spinner}" class="spinner">Spin The Wheel</button>
+				<div id="value" class="spinner">$${this.cash}</div>
+			`);//spinner
+		}//coin Flip
 	}//Game
 
 	var wheel = new Game();
@@ -309,7 +355,10 @@ $(function () {
 		wheel.spinWheel();
 		wheel.bSpinner();
 	});
-
+	//////coin flip/////
+	$(document).on('click', '#coin', function() {
+		wheel.coinFlip();
+	});
 
 
 
