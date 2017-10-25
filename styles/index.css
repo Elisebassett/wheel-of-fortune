@@ -1,6 +1,12 @@
+
 body {
-	font-family: helvetica;
+	font-family: 'wheel-of-fortune';
 	/*background-image: url(https://wallscover.com/images/wheel-of-fortune-10.jpg);*/
+}
+
+#logo {
+	position: relative;
+	margin: 0 auto;
 }
 
 .display {
