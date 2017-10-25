@@ -231,29 +231,45 @@ $(function () {
 						else {
 							if (this.spinner === 'a_spinner' && this.spinCount === 1) {
 								this.spinner = 'b_spinner';
-								alert(`Nope! It\'s ${this.nameB}/'s turn`);
+								alert(`Nope! It\'s ${this.nameB}'s turn`);
 								this.playerA = this.playerA - this.cash;
 								$('#playerA').html(this.playerA);
-								$('#turn').html(`${this.nameB}/'s turn`);
+								$('#turn').html(`${this.nameB}'s turn`);
 								this.spinSetter();
 							}
 							if (this.spinner === 'b_spinner' && this.spinCount === 1) {
 								this.spinner = 'a_spinner';
-								alert(`Nope! It\'s ${this.nameA}/'s turn`);
+								alert(`Nope! It\'s ${this.nameA}'s turn`);
 								this.playerB = this.playerB - this.cash;
 								$('#playerB').html(this.playerB);
-								$('#turn').html(`${this.nameA}/'s turn`);
+								$('#turn').html(`${this.nameA}'s turn`);
 								this.spinSetter();
 							}//turn change
 						}//if else gameplay
 					}//if game is still in play 
 					if (this.checkArray.length === 0) {
-						alert('WINNER WINNER CHICKEN DINNER!!!');
+						if (this.spinner === 'a_spinner') {
+							alert(`${this.nameA} you did the thing!`);
+							this.playerA = this.playerA + 1000;
+						}//Player A Wins!
+						if (this.spinner === 'b_spinner') {
+							alert(`${this.nameB} you did the thing!`);
+							this.playerB = this.playerB + 1000;
+						}//Player A Wins!
 						if (this.wordArray.length > 0) {
 							$('#keyboard').html(`
 								<button id='next'>Next Word!</button>
 							`);//display
 						}//nextgame if
+						if (this.wordArray.length === 0) {
+							$('#game').html('');
+							if (this.playerA > this.playerB) {
+								$('#turn').html(`<h1>${this.nameA} IS THE WINNER!!</h1>`);
+							}///player A wins
+							if (this.playerB > this.playerA) {
+								$('#turn').html(`<h1>${this.nameB} IS THE WINNER!!</h1>`);
+							}///player B wins
+						}//winners
 						$('#guessInput').html('');
 					}//game win	
 				}//did you spin?
@@ -262,21 +278,41 @@ $(function () {
 		}//guessLetter
 
 		checkGuess() {
-			let guess = $('#guess').val().toUpperCase().replace(/\s/g, '');
-			this.word = this.gameArray.join('');
-			console.log(this.word);
-			// console.log(second_word);
-			if (this.word === guess) {
-				alert('You did the thing!');
-				if (this.wordArray.length > 0) {
-					$('#keyboard').html(`
-						<button id='next'>Next Word!</button>
-					`);//display
-				}//nextgame if
-				$('#guessInput').html('');
+			if (this.spinner === undefined){
+				alert('Flip a coin to see who goes first');
 			} else {
-				alert('nope');
-			}//if else
+				let guess = $('#guess').val().toUpperCase().replace(/\s/g, '');
+				this.word = this.gameArray.join('');
+				console.log(this.word);
+				// console.log(second_word);
+				if (this.word === guess) {
+					if (this.spinner === 'a_spinner') {
+						alert(`${this.nameA} you did the thing!`);
+						this.playerA = this.playerA + 1000;
+					}//Player A Wins!
+					if (this.spinner === 'b_spinner') {
+						alert(`${this.nameB} you did the thing!`);
+						this.playerB = this.playerB + 1000;
+					}//Player A Wins!
+					if (this.wordArray.length > 0) {
+						$('#keyboard').html(`
+							<button id='next'>Next Word!</button>
+						`);//display
+					}//nextgame if
+					if (this.wordArray.length === 0) {
+						$('#game').html('');
+						if (this.playerA > this.playerB) {
+							$('#turn').html(`<h1>${this.nameA} IS THE WINNER!!</h1>`);
+						}///player A wins
+						if (this.playerB > this.playerA) {
+							$('#turn').html(`<h1>${this.nameB} IS THE WINNER!!</h1>`);
+						}///player B wins
+					}//winners
+					
+				} else {
+					alert('nope');
+				}//if else
+			}//has the game begun?
 		}//checkGuess
 		
 		hintGiver() {
@@ -294,30 +330,33 @@ $(function () {
 
 		nextWord() {
 			$('#display').html('');
-
+			$('#guessInput').html('');
 			this.game_count = this.game_count +1;
 			this.checkArray = undefined;
 
 		}//nextWord
 
 		getValue() {
-	        this.cashValues = [5000, 600, 500, 300, 500, 800, 550, 400, 300, 900, 500, 300, 900, 0, 600, 400, 300, 800, 350, 450, 700, 300, 600, 'Bankrupt'];
-			this.cash = this.cashValues[Math.floor(Math.random()*this.cashValues.length)];
-			$('#value').html(`$${this.cash}`);
+	        if (this.spinCount === 1) {
+
+	        } else {
+		        this.cashValues = [5000, 600, 500, 300, 500, 800, 550, 400, 300, 900, 500, 300, 900, 0, 600, 400, 300, 800, 350, 450, 700, 300, 600, 'Bankrupt'];
+				this.cash = this.cashValues[Math.floor(Math.random()*this.cashValues.length)];
+				if (this.cash === 'Bankrupt') {
+					this.cash = 0;
+					if (this.spinner === 'a_spinner') {
+					this.playerA = 0;
+					}//playerA
+					if (this.spinner === 'b_spinner') {
+					this.playerB = 0;
+					}//playerB
+				}//bankrupt if
+				else {
+					$('#value').html(`$${this.cash}`);
+				}//add cash		
+			}///has the wheel been spun already?
 		}//spin the wheel
-	
-		spinWheel() {
-			if (this.cash === 'Bankrupt') {
-				if (this.spinner === 'a_spinner') {
-				this.playerA = 0;
-				}//playerA
-				if (this.spinner === 'b_spinner') {
-				this.playerB = 0;
-				}//playerB
-			}//bankrupt if
-			this.wheelSpun();
-			console.log(this.spinCount);
-		}//a spinner
+
 		coinFlip() {
 			let spinnerArray = ['a_spinner', 'b_spinner'];
 			let spinner = spinnerArray[Math.floor(Math.random()*spinnerArray.length)];
@@ -363,11 +402,11 @@ $(function () {
 	////spin the wheel////
 	$(document).on('click', '#a_spinner', function() {
 		wheel.getValue();
-		wheel.spinWheel();
+		wheel.wheelSpun();
 	});
 	$(document).on('click', '#b_spinner', function() {
 		wheel.getValue();
-		wheel.spinWheel();
+		wheel.wheelSpun();
 	});
 	//////coin flip/////
 	$(document).on('click', '#coin', function() {
