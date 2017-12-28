@@ -4,7 +4,9 @@
 $(function () {
 	
 	if (this.game_count === undefined) {
-		$('#display').html(`<button id="play" class="btn btn-primary">Let's Play!</button>`);
+		$('#game-board').hide();
+		$('#lets-play').html(`<button id="play" class="btn btn-primary">Let's Play!</button>`)
+
 	}
 
 	class Game {
@@ -20,7 +22,6 @@ $(function () {
 			this.spinCount = null;
 			this.currentPlayer ; // extra
 		}//constructor
-
 
 		///////////////////In Object Functions/////////////////
 		spinSetter() {
@@ -39,73 +40,59 @@ $(function () {
 				this.playerA = 1000;
 				this.playerB = 1000;
 			}//Game setter
-			$('#display').html('');
+			$('#game-board').show();
 			////////////Variables///////////
 			
-			this.wordArray = this.puzzle_words[this.game_count].word.toUpperCase();
-			let wordArray = this.wordArray.split('');
+			this.wordArray = this.puzzle_words[this.game_count].word.toUpperCase().split('');
+			console.log(this.wordArray);
 
 			let col = `<div class="col-1 grid"><img src="imgs/wheel_logo.png"></div>`;
-			let end_row = `
-				<div class="row">
-		          <div class="col-1 grid end"></div>
-		          ${col.repeat(10)}
-		          <div class="col-1 grid end"></div>
-		        </div> <!-- row -->
-	        `;//end row
+
+			$('.end_row').html(col.repeat(10));
+
 			let middle_row = `
 				<div class="row">
-		          ${col} ${col} ${col} ${col} ${col} ${col} ${col} ${col} ${col} ${col} ${col} ${col}
-		        </div> <!-- row -->
-		     `;//middle row
+		      ${col.repeat(12)}
+		     </div> <!-- row -->
+		  `;//middle row
 
 			////////////////Conditional Game Displays/////////////////////
 ///HTML cleanup idea - put elephant in the room in a 2D array use that to separate and populate divs////
 
-			if (this.game_count === 0) {
+			
+		for (var i = 0; i < this.wordArray.length; i++) {
+					
 
-				for (var i = 0; i < this.wordArray.length; i++) {
-					this.wordArray[i]
-				}
+			if (this.wordArray[i] === " ") {
+				console.log('I FOUND A SPACE!');
+			}
+		}
+		
+			if (this.game_count === 0) {
 				
 				$('#display').append(`
-
-					<div class="container">
-				        ${end_row}
-				        <div class="row">
-				        	${col}
-				        	${col}
-				          <div class="col-1 grid L" data-letter="L" id="letter"></div>
-				          <div class="col-1 grid E" data-letter="E" id="letter"></div>
-				          <div class="col-1 grid P" data-letter="P" id="letter"></div>
-				          <div class="col-1 grid H" data-letter="H" id="letter"></div>
-				          <div class="col-1 grid A" data-letter="A" id="letter"></div>
-				          <div class="col-1 grid N" data-letter="N" id="letter"></div>
-				          <div class="col-1 grid T" data-letter="T" id="letter"></div>
-				        	${col} ${col}
-				        </div> <!-- row -->
-				        <div class="row">
-				        	${col} ${col}
-				          <div class="col-1 grid I" data-letter="I" id="letter"></div>
-				          <div class="col-1 grid N" data-letter="N" id="letter"></div>
-					        ${col}
-				          <div class="col-1 grid T" data-letter="T" id="letter"></div>
-				          <div class="col-1 grid H" data-letter="H" id="letter"></div>
-				          <div class="col-1 grid E" data-letter="E" id="letter"></div>
-					        ${col} ${col} ${col} ${col}
-				        </div> <!-- row -->
-				      	<div class="row">
-				      		<div class="col-1 grid end"></div>
-				        	${col}
-				        	<div class="col-1 grid R" data-letter="R" id="letter"></div>
-				        	<div class="col-1 grid O" data-letter="O" id="letter"></div>
-				        	<div class="col-1 grid O" data-letter="O" id="letter"></div>
-				        	<div class="col-1 grid M" data-letter="M" id="letter"></div>
-				        	${col} ${col} ${col} ${col} ${col}
-					        <div class="col-1 grid end"></div>
-					    </div> <!-- row -->
-					    ${end_row}
-				      </div> <!-- container --> 
+		        	${col}
+		          <div class="col-1 grid L" data-letter="L" id="letter"></div>
+		          <div class="col-1 grid E" data-letter="E" id="letter"></div>
+		          <div class="col-1 grid P" data-letter="P" id="letter"></div>
+		          <div class="col-1 grid H" data-letter="H" id="letter"></div>
+		          <div class="col-1 grid A" data-letter="A" id="letter"></div>
+		          <div class="col-1 grid N" data-letter="N" id="letter"></div>
+		          <div class="col-1 grid T" data-letter="T" id="letter"></div>
+		        	${col}
+		          <div class="col-1 grid I" data-letter="I" id="letter"></div>
+		          <div class="col-1 grid N" data-letter="N" id="letter"></div>
+			        ${col}
+		          <div class="col-1 grid T" data-letter="T" id="letter"></div>
+		          <div class="col-1 grid H" data-letter="H" id="letter"></div>
+		          <div class="col-1 grid E" data-letter="E" id="letter"></div>
+			        ${col} ${col} ${col} ${col}
+		        	${col}
+		        	<div class="col-1 grid R" data-letter="R" id="letter"></div>
+		        	<div class="col-1 grid O" data-letter="O" id="letter"></div>
+		        	<div class="col-1 grid O" data-letter="O" id="letter"></div>
+		        	<div class="col-1 grid M" data-letter="M" id="letter"></div>
+		        	${col} ${col} ${col} ${col} ${col}
 				`);//end game 0 append
 			}//if game 0
 			if (this.game_count === 1) {
