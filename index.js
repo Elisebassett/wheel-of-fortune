@@ -1,18 +1,27 @@
+// make word array an object like this: {word: '', hint: ''}
+// dynamically generate the html for the game board
+
 $(function () {
+	
+	if (this.game_count === undefined) {
+		$('#game-board').hide();
+		$('#lets-play').html(`<button id="play" class="btn btn-primary">Let's Play!</button>`)
+
+	}///Before the game starts
 
 	class Game {
 		constructor() {
-			///turn into an array of words hint: split()
-			this.wordArray = [['E','L','E','P','H','A','N','T','I','N','T','H','E','R','O','O','M'], ['N','A','G','G','E','R'],['O','B','S','T','R','E','P','E','R','O','U','S']];
+			///turn into an array of words inside of an object{} hint: split()
+			this.puzzle_words = [{word: 'Elephant in the room', hint: ''}, {word: 'naggers', hint: 'People who annoy you'}, {word: 'obstreperous', hint:''}]
+			this.wordArray ;
 			this.word = null;
 			this.letterArray = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'];
 			this.game_count = null;
-			this.gameArray = [];
 			this.playerA ;
 			this.playerB ;
 			this.spinCount = null;
+			this.currentPlayer ; // extra
 		}//constructor
-
 
 		///////////////////In Object Functions/////////////////
 		spinSetter() {
@@ -24,117 +33,47 @@ $(function () {
 		}//add a spin
 		///////////////////Functions//////////////////////////
 		letsPlay() { 
-			////////////Variables///////////
-			this.gameArray = this.wordArray.shift();
-			let col = `<div class="col-1 grid"><img src="imgs/wheel_logo.png"></div>`;
-			let end_row = `
-				<div class="row">
-		          <div class="col-1 grid end"></div>
-		          ${col} ${col} ${col} ${col} ${col} ${col} ${col} ${col} ${col} ${col}
-		          <div class="col-1 grid end"></div>
-		        </div> <!-- row -->
-	        `;//end row
-			let middle_row = `
-				<div class="row">
-		          ${col} ${col} ${col} ${col} ${col} ${col} ${col} ${col} ${col} ${col} ${col} ${col}
-		        </div> <!-- row -->
-		     `;//middle row
-
-	     	//////////////Game Setter//////////////
+	    ////////////////Game Setter//////////////
 			if (this.game_count === null) {
 				this.game_count = 0;
 				this.cash = 0;
 				this.playerA = 1000;
 				this.playerB = 1000;
 			}//Game setter
-			$('#display').html('');
-			////////////////Conditional Game Displays/////////////////////
-///HTML cleanup idea - put elephant in the room in a 2D array use that to separate and populate divs////
+			$('#game-board').show();
+			////////////Variables///////////
+			
+			this.wordArray = this.puzzle_words[this.game_count].word.toUpperCase().split('');
+			console.log(this.wordArray);
 
-			if (this.game_count === 0) {
-				$('#display').append(`
-					<div class="container">
-				        ${end_row}
-				        <div class="row">
-				        	${col}
-				        	${col}
-				          <div class="col-1 grid E" data-letter="E" id="letter"></div>
-				          <div class="col-1 grid L" data-letter="L" id="letter"></div>
-				          <div class="col-1 grid E" data-letter="E" id="letter"></div>
-				          <div class="col-1 grid P" data-letter="P" id="letter"></div>
-				          <div class="col-1 grid H" data-letter="H" id="letter"></div>
-				          <div class="col-1 grid A" data-letter="A" id="letter"></div>
-				          <div class="col-1 grid N" data-letter="N" id="letter"></div>
-				          <div class="col-1 grid T" data-letter="T" id="letter"></div>
-				        	${col} ${col}
-				        </div> <!-- row -->
-				        <div class="row">
-				        	${col} ${col}
-				          <div class="col-1 grid I" data-letter="I" id="letter"></div>
-				          <div class="col-1 grid N" data-letter="N" id="letter"></div>
-					        ${col}
-				          <div class="col-1 grid T" data-letter="T" id="letter"></div>
-				          <div class="col-1 grid H" data-letter="H" id="letter"></div>
-				          <div class="col-1 grid E" data-letter="E" id="letter"></div>
-					        ${col} ${col} ${col} ${col}
-				        </div> <!-- row -->
-				      	<div class="row">
-				      		<div class="col-1 grid end"></div>
-				        	${col}
-				        	<div class="col-1 grid R" data-letter="R" id="letter"></div>
-				        	<div class="col-1 grid O" data-letter="O" id="letter"></div>
-				        	<div class="col-1 grid O" data-letter="O" id="letter"></div>
-				        	<div class="col-1 grid M" data-letter="M" id="letter"></div>
-				        	${col} ${col} ${col} ${col} ${col}
-					        <div class="col-1 grid end"></div>
-					    </div> <!-- row -->
-				      </div> <!-- container --> 
-				`);//end game 0 append
-			}//if game 0
-			if (this.game_count === 1) {
-				$('#display').append(`
-					<div class="container">
-				        ${end_row}
-				        <div class="row">
-				        	${col} ${col}
-				          <div class="col-1 grid N" data-letter="N" id="letter"></div>
-				          <div class="col-1 grid A" data-letter="A" id="letter"></div>
-				          <div class="col-1 grid G" data-letter="G" id="letter"></div>
-				          <div class="col-1 grid G" data-letter="G" id="letter"></div>
-				          <div class="col-1 grid E" data-letter="E" id="letter"></div>
-				          <div class="col-1 grid R" data-letter="R" id="letter"></div>
-				        	${col} ${col} ${col} ${col}
-				        </div> <!-- row -->
-				        ${middle_row}
-				      	${end_row}
-				      </div> <!-- container --> 
-					`);//end game 0 append
-				}//if game 1
-				if (this.game_count === 2) {
-				$('#display').append(`
-					<div class="container">
-				        ${end_row}
-				        <div class="row">
-				          <div class="col-1 grid O" data-letter="O" id="letter"></div>
-				          <div class="col-1 grid B" data-letter="B" id="letter"></div>
-				          <div class="col-1 grid S" data-letter="S" id="letter"></div>
-				          <div class="col-1 grid T" data-letter="T" id="letter"></div>
-				          <div class="col-1 grid R" data-letter="R" id="letter"></div>
-				          <div class="col-1 grid E" data-letter="E" id="letter"></div>
-				          <div class="col-1 grid P" data-letter="P" id="letter"></div>
-				          <div class="col-1 grid E" data-letter="E" id="letter"></div>
-				          <div class="col-1 grid R" data-letter="R" id="letter"></div>
-				          <div class="col-1 grid O" data-letter="O" id="letter"></div>
-				          <div class="col-1 grid U" data-letter="U" id="letter"></div>
-				          <div class="col-1 grid S" data-letter="S" id="letter"></div>
-				        </div> <!-- row -->
-				        ${middle_row}
-				      	${end_row}
-				      </div> <!-- container --> 
-					`);//end game 0 append
-				}//if game 2
+			let col = `<div class="col-1 grid"><img src="imgs/wheel_logo.png"></div>`;
+
+			$('.end_row').html(col.repeat(10));
+
+			let middle_row = `
+				<div class="row">
+		      ${col.repeat(12)}
+		     </div> <!-- row -->
+		  `;//middle row
+
+		//////////////////////Board Game Generator///////////////////////////
+		for (var i = 0; i < this.wordArray.length; i++) {
+
+			if (i === 10) {
+				$('#display').append(col.repeat(2));
+			}
+			if (this.wordArray[i] === " ") {
+				$('#display').append(col);
+			}
+			else {
+				$('#display').append(`<div class="col-1 grid ${this.wordArray[i]}" data-letter="${this.wordArray[i]}" id="letter"></div>`);
+			}
+
+		}//for loop to generate game board
+		$('#display').append(col.repeat(21-this.wordArray.length));
 				
-			/////////////////////End of game conditional appends/////////////////////
+				
+		/////////////////////End of Board Game Generation/////////////////////
 			//Add Keyboard
 			$('#keyboard').html('');
 			for (var i = 0; i < this.letterArray.length; i++) {
@@ -154,8 +93,8 @@ $(function () {
 			`);//guessInput
 			//Add Players
 			if (this.game_count === 0) {
-				this.nameA = prompt('What\'s your name?');
-				this.nameB = prompt('What\'s your name?');
+				this.nameA = prompt('Player 1, what\'s your name?');
+				this.nameB = prompt('Player 2, what\'s your name?');
 			}//customize
 			$('#players').html(`
 				<div class="col-4" id="player_a">
@@ -182,6 +121,9 @@ $(function () {
 					<div id="value" class="spinner">$${this.cash}</div>
 				`);//spinner	
 			}//spin setter
+			console.log(this.game_count);
+			console.log(this.puzzle_words[0].word);
+			console.log(this.wordArray);
 		}//letsPlay
 
 
@@ -197,7 +139,7 @@ $(function () {
 					// 	prompt('would you like to buy a vowel?');
 					// }//if buy a vowel
 					if (this.checkArray === undefined) {
-						this.checkArray = this.gameArray;
+						this.checkArray = this.wordArray;
 					}//set checkArray
 		
 					if (this.checkArray.length > 0) {
@@ -208,7 +150,7 @@ $(function () {
 							this.checkArray = $.grep(this.checkArray, function (a) {
 								return a !== letter;
 							});
-							// letterCount = this.gameArray.filter(function(e){
+							// letterCount = this.wordArray.filter(function(e){
 							// 	e === letter});
 							// console.log(letterCount);
 							// console.log(letterCount.length);
@@ -274,7 +216,6 @@ $(function () {
 					}//game win	
 				}//did you spin?
 			}///have you fliped yet?
-			console.log(this.spinCount);
 		}//guessLetter
 
 		checkGuess() {
@@ -282,7 +223,7 @@ $(function () {
 				alert('Flip a coin to see who goes first');
 			} else {
 				let guess = $('#guess').val().toUpperCase().replace(/\s/g, '');
-				this.word = this.gameArray.join('');
+				this.word = this.wordArray.replace(/\s/g, '');
 				console.log(this.word);
 				// console.log(second_word);
 				if (this.word === guess) {
@@ -323,7 +264,7 @@ $(function () {
 				$('#hint').html('<h5 class="h5-responsive hint">Easily seen, easily ignored.</h5>');
 			}//if game 0
 			if (this.game_count === 1) {
-				$('#hint').html('Are you a fan of South Park?');
+				$('#hint').html('People that annoy you');
 			}// if game 1
 			if (this.game_count === 2) {
 				$('#hint').html('An extremely pretentious word for "loud" and "noisy"');
@@ -335,7 +276,6 @@ $(function () {
 			$('#guessInput').html('');
 			this.game_count = this.game_count +1;
 			this.checkArray = undefined;
-			console.log(this.spinCount);
 		}//nextWord
 
 		getValue() {
