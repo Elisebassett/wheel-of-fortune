@@ -7,7 +7,7 @@ $(function () {
 		$('#game-board').hide();
 		$('#lets-play').html(`<button id="play" class="btn btn-primary">Let's Play!</button>`)
 
-	}
+	}///Before the game starts
 
 	class Game {
 		constructor() {
@@ -56,90 +56,24 @@ $(function () {
 		     </div> <!-- row -->
 		  `;//middle row
 
-			////////////////Conditional Game Displays/////////////////////
-///HTML cleanup idea - put elephant in the room in a 2D array use that to separate and populate divs////
-
-			
+		//////////////////////Board Game Generator///////////////////////////
 		for (var i = 0; i < this.wordArray.length; i++) {
-					
 
-			if (this.wordArray[i] === " ") {
-				console.log('I FOUND A SPACE!');
+			if (i === 10) {
+				$('#display').append(col.repeat(2));
 			}
-		}
-		
-			if (this.game_count === 0) {
+			if (this.wordArray[i] === " ") {
+				$('#display').append(col);
+			}
+			else {
+				$('#display').append(`<div class="col-1 grid ${this.wordArray[i]}" data-letter="${this.wordArray[i]}" id="letter"></div>`);
+			}
+
+		}//for loop to generate game board
+		$('#display').append(col.repeat(21-this.wordArray.length));
 				
-				$('#display').append(`
-		        	${col}
-		          <div class="col-1 grid L" data-letter="L" id="letter"></div>
-		          <div class="col-1 grid E" data-letter="E" id="letter"></div>
-		          <div class="col-1 grid P" data-letter="P" id="letter"></div>
-		          <div class="col-1 grid H" data-letter="H" id="letter"></div>
-		          <div class="col-1 grid A" data-letter="A" id="letter"></div>
-		          <div class="col-1 grid N" data-letter="N" id="letter"></div>
-		          <div class="col-1 grid T" data-letter="T" id="letter"></div>
-		        	${col}
-		          <div class="col-1 grid I" data-letter="I" id="letter"></div>
-		          <div class="col-1 grid N" data-letter="N" id="letter"></div>
-			        ${col}
-		          <div class="col-1 grid T" data-letter="T" id="letter"></div>
-		          <div class="col-1 grid H" data-letter="H" id="letter"></div>
-		          <div class="col-1 grid E" data-letter="E" id="letter"></div>
-			        ${col} ${col} ${col} ${col}
-		        	${col}
-		        	<div class="col-1 grid R" data-letter="R" id="letter"></div>
-		        	<div class="col-1 grid O" data-letter="O" id="letter"></div>
-		        	<div class="col-1 grid O" data-letter="O" id="letter"></div>
-		        	<div class="col-1 grid M" data-letter="M" id="letter"></div>
-		        	${col} ${col} ${col} ${col} ${col}
-				`);//end game 0 append
-			}//if game 0
-			if (this.game_count === 1) {
-				$('#display').append(`
-					<div class="container">
-				        ${end_row}
-				        <div class="row">
-				        	${col} ${col}
-				          <div class="col-1 grid N" data-letter="N" id="letter"></div>
-				          <div class="col-1 grid A" data-letter="A" id="letter"></div>
-				          <div class="col-1 grid G" data-letter="G" id="letter"></div>
-				          <div class="col-1 grid G" data-letter="G" id="letter"></div>
-				          <div class="col-1 grid E" data-letter="E" id="letter"></div>
-				          <div class="col-1 grid R" data-letter="R" id="letter"></div>
-				          <div class="col-1 grid S" data-letter="S" id="letter"></div>
-				        	${col} ${col} ${col}
-				        </div> <!-- row -->
-				        ${middle_row}
-				      	${end_row}
-				      </div> <!-- container --> 
-					`);//end game 0 append
-				}//if game 1
-				if (this.game_count === 2) {
-				$('#display').append(`
-					<div class="container">
-				        ${end_row}
-				        <div class="row">
-				          <div class="col-1 grid O" data-letter="O" id="letter"></div>
-				          <div class="col-1 grid B" data-letter="B" id="letter"></div>
-				          <div class="col-1 grid S" data-letter="S" id="letter"></div>
-				          <div class="col-1 grid T" data-letter="T" id="letter"></div>
-				          <div class="col-1 grid R" data-letter="R" id="letter"></div>
-				          <div class="col-1 grid E" data-letter="E" id="letter"></div>
-				          <div class="col-1 grid P" data-letter="P" id="letter"></div>
-				          <div class="col-1 grid E" data-letter="E" id="letter"></div>
-				          <div class="col-1 grid R" data-letter="R" id="letter"></div>
-				          <div class="col-1 grid O" data-letter="O" id="letter"></div>
-				          <div class="col-1 grid U" data-letter="U" id="letter"></div>
-				          <div class="col-1 grid S" data-letter="S" id="letter"></div>
-				        </div> <!-- row -->
-				        ${middle_row}
-				      	${end_row}
-				      </div> <!-- container --> 
-					`);//end game 0 append
-				}//if game 2
 				
-			/////////////////////End of game conditional appends/////////////////////
+		/////////////////////End of Board Game Generation/////////////////////
 			//Add Keyboard
 			$('#keyboard').html('');
 			for (var i = 0; i < this.letterArray.length; i++) {
