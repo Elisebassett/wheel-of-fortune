@@ -11,7 +11,6 @@ $(function () {
 
 	class Game {
 		constructor() {
-			///turn into an array of words inside of an object{} hint: split()
 			this.puzzle_words = [{word: 'Elephant in the room', hint: ''}, {word: 'naggers', hint: 'People who annoy you'}, {word: 'obstreperous', hint:''}]
 			this.wordArray ;
 			this.word = null;
@@ -28,11 +27,13 @@ $(function () {
 			this.spinCount = 0;
 			console.log(this.spinCount);
 		}//spin setter
+		
 		wheelSpun() {
 			this.spinCount = this.spinCount + 1;
 		}//add a spin
 		///////////////////Functions//////////////////////////
-		letsPlay() { 
+		
+		letsPlay() { ///This sets up the next puzzle
 	    ////////////////Game Setter//////////////
 			if (this.game_count === null) {
 				this.game_count = 0;
@@ -46,6 +47,10 @@ $(function () {
 			this.wordArray = this.puzzle_words[this.game_count].word.toUpperCase().split('');
 			console.log(this.wordArray);
 
+			//set checkArray for guessing letters
+			this.checkArray = this.wordArray.filter(i => i !== ' ');
+			console.log(this.checkArray);
+
 			let col = `<div class="col-1 grid"><img src="imgs/wheel_logo.png"></div>`;
 
 			$('.end_row').html(col.repeat(10));
@@ -58,7 +63,6 @@ $(function () {
 
 		//////////////////////Board Game Generator///////////////////////////
 		for (var i = 0; i < this.wordArray.length; i++) {
-
 			if (i === 10) {
 				$('#display').append(col.repeat(2));
 			}
@@ -68,7 +72,6 @@ $(function () {
 			else {
 				$('#display').append(`<div class="col-1 grid ${this.wordArray[i]}" data-letter="${this.wordArray[i]}" id="letter"></div>`);
 			}
-
 		}//for loop to generate game board
 		$('#display').append(col.repeat(21-this.wordArray.length));
 				
@@ -85,12 +88,7 @@ $(function () {
 				`);//keyboard append
 			} //for loop
 			//Add Guess input and Hint button
-			$('#guessInput').append(`
-				<input type="text" id="guess" placeholder="Think you know what it is?">
-				<button id="submit_guess" class="btn btn-mdb btn-lrg">Solve the puzzle</button>
-				<button id="hint_giver" class="btn btn-pink btn lrg">Need a hint?</button>
-			    <p id="hint"></p>
-			`);//guessInput
+	
 			//Add Players
 			if (this.game_count === 0) {
 				this.nameA = prompt('Player 1, what\'s your name?');
@@ -138,9 +136,6 @@ $(function () {
 					// if (letter === 'A' || 'E' || 'I' || 'O' || 'U') {
 					// 	prompt('would you like to buy a vowel?');
 					// }//if buy a vowel
-					if (this.checkArray === undefined) {
-						this.checkArray = this.wordArray;
-					}//set checkArray
 		
 					if (this.checkArray.length > 0) {
 						//if correct
@@ -216,6 +211,9 @@ $(function () {
 					}//game win	
 				}//did you spin?
 			}///have you fliped yet?
+
+			console.log(this.checkArray);
+
 		}//guessLetter
 
 		checkGuess() {
