@@ -53,27 +53,24 @@ $(function () {
 
 			let col = `<div class="col-1 grid"><img src="imgs/wheel_logo.png"></div>`;
 
-			$('.end_row').html(col.repeat(10));
-
-			let middle_row = `
-				<div class="row">
-		      ${col.repeat(12)}
-		     </div> <!-- row -->
-		  `;//middle row
-
 		//////////////////////Board Game Generator///////////////////////////
-		for (var i = 0; i < this.wordArray.length; i++) {
-			if (i === 10) {
-				$('#display').append(col.repeat(2));
-			}
-			if (this.wordArray[i] === " ") {
-				$('#display').append(col);
-			}
-			else {
-				$('#display').append(`<div class="col-1 grid ${this.wordArray[i]}" data-letter="${this.wordArray[i]}" id="letter"></div>`);
-			}
-		}//for loop to generate game board
-		$('#display').append(col.repeat(21-this.wordArray.length));
+			$('#display').append(col);
+			for (var i = 0; i < this.wordArray.length; i++) {
+				if (i === 10) {
+					$('#display').append(col.repeat(2));
+				}
+				if (this.wordArray[i] === " ") {
+					$('#display').append(col);
+				}
+				else {
+					$('#display').append(`<div class="col-1 grid ${this.wordArray[i]}" data-letter="${this.wordArray[i]}" id="letter"></div>`);
+				}
+			}//for loop to generate game board
+				if (this.wordArray.length < 10 ) {
+					$('#display').append(col.repeat(23-this.wordArray.length));
+				} else {
+					$('#display').append(col.repeat(21-this.wordArray.length));
+				}
 				
 				
 		/////////////////////End of Board Game Generation/////////////////////
@@ -322,6 +319,7 @@ $(function () {
 	});
 	////Play Button////
 	$(document).on('click', '#play', function(){
+		$('#game-board').hide();
 		wheel.letsPlay();
 	});
 	////letter guesser///
