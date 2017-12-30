@@ -11,7 +11,7 @@ $(function () {
 
 	class Game {
 		constructor() {
-			this.puzzle_words = [{word: 'Elephant in the room', hint: ''}, {word: 'naggers', hint: 'People who annoy you'}, {word: 'obstreperous', hint:''}]
+			this.puzzle_words = [{word: 'Elephant in the room', hint: 'this is a hint'}, {word: 'naggers', hint: 'People who annoy you'}, {word: 'obstreperous', hint:'This is a hint'}]
 			this.wordArray ;
 			this.word = null;
 			this.letterArray = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'];
@@ -53,27 +53,24 @@ $(function () {
 
 			let col = `<div class="col-1 grid"><img src="imgs/wheel_logo.png"></div>`;
 
-			$('.end_row').html(col.repeat(10));
-
-			let middle_row = `
-				<div class="row">
-		      ${col.repeat(12)}
-		     </div> <!-- row -->
-		  `;//middle row
-
 		//////////////////////Board Game Generator///////////////////////////
-		for (var i = 0; i < this.wordArray.length; i++) {
-			if (i === 10) {
-				$('#display').append(col.repeat(2));
-			}
-			if (this.wordArray[i] === " ") {
-				$('#display').append(col);
-			}
-			else {
-				$('#display').append(`<div class="col-1 grid ${this.wordArray[i]}" data-letter="${this.wordArray[i]}" id="letter"></div>`);
-			}
-		}//for loop to generate game board
-		$('#display').append(col.repeat(21-this.wordArray.length));
+			$('#display').append(col);
+			for (var i = 0; i < this.wordArray.length; i++) {
+				if (i === 10) {
+					$('#display').append(col.repeat(2));
+				}
+				if (this.wordArray[i] === " ") {
+					$('#display').append(col);
+				}
+				else {
+					$('#display').append(`<div class="col-1 grid ${this.wordArray[i]}" data-letter="${this.wordArray[i]}" id="letter"></div>`);
+				}
+			}//for loop to generate game board
+				if (this.wordArray.length < 10 ) {
+					$('#display').append(col.repeat(23-this.wordArray.length));
+				} else {
+					$('#display').append(col.repeat(21-this.wordArray.length));
+				}
 				
 				
 		/////////////////////End of Board Game Generation/////////////////////
@@ -258,15 +255,7 @@ $(function () {
 		
 		hintGiver() {
 		/////turn into an array
-			if (this.game_count === 0) {
-				$('#hint').html('<h5 class="h5-responsive hint">Easily seen, easily ignored.</h5>');
-			}//if game 0
-			if (this.game_count === 1) {
-				$('#hint').html('People that annoy you');
-			}// if game 1
-			if (this.game_count === 2) {
-				$('#hint').html('An extremely pretentious word for "loud" and "noisy"');
-			}// if game 2
+			$('#hint').html(`<h5 class="h5-responsive hint">${this.puzzle_words[this.game_count].hint}</h5>`);
 		}//hintGiver
 
 		nextWord() {
@@ -322,6 +311,7 @@ $(function () {
 	});
 	////Play Button////
 	$(document).on('click', '#play', function(){
+		$('#game-board').hide();
 		wheel.letsPlay();
 	});
 	////letter guesser///
