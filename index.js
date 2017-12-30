@@ -11,7 +11,7 @@ $(function () {
 
 	class Game {
 		constructor() {
-			this.puzzle_words = [{word: 'Elephant in the room', hint: ''}, {word: 'naggers', hint: 'People who annoy you'}, {word: 'obstreperous', hint:''}]
+			this.puzzle_words = [{word: 'Elephant in the room', hint: 'this is a hint'}, {word: 'naggers', hint: 'People who annoy you'}, {word: 'obstreperous', hint:'This is a hint'}]
 			this.wordArray ;
 			this.word = null;
 			this.letterArray = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'];
@@ -255,15 +255,7 @@ $(function () {
 		
 		hintGiver() {
 		/////turn into an array
-			if (this.game_count === 0) {
-				$('#hint').html('<h5 class="h5-responsive hint">Easily seen, easily ignored.</h5>');
-			}//if game 0
-			if (this.game_count === 1) {
-				$('#hint').html('People that annoy you');
-			}// if game 1
-			if (this.game_count === 2) {
-				$('#hint').html('An extremely pretentious word for "loud" and "noisy"');
-			}// if game 2
+			$('#hint').html(`<h5 class="h5-responsive hint">${this.puzzle_words[this.game_count].hint}</h5>`);
 		}//hintGiver
 
 		nextWord() {
