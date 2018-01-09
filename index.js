@@ -25,35 +25,21 @@ $(function () {
 		///////////////////In Object Functions/////////////////
 		spinSetter() {
 			this.spinCount = 0;
-			console.log(this.spinCount);
 		}//spin setter
 		
 		wheelSpun() {
 			this.spinCount = this.spinCount + 1;
 		}//add a spin
-		///////////////////Functions//////////////////////////
-		
-		letsPlay() { ///This sets up the next puzzle
-	    ////////////////Game Setter//////////////
-			if (this.game_count === null) {
-				this.game_count = 0;
-				this.cash = 0;
-				this.playerA = 1000;
-				this.playerB = 1000;
-			}//Game setter
+
+		gameBoard() {
 			$('#game-board').show();
 			////////////Variables///////////
-			
 			this.wordArray = this.puzzle_words[this.game_count].word.toUpperCase().split('');
-			console.log(this.wordArray);
-
 			//set checkArray for guessing letters
 			this.checkArray = this.wordArray.filter(i => i !== ' ');
-			console.log(this.checkArray);
-
 			let col = `<div class="col-1 grid"><img src="imgs/wheel_logo.png"></div>`;
-
-		//////////////////////Board Game Generator///////////////////////////
+			/////////////////////Board Game Generator///////////////////////////
+			$('.bookend').html(`<div class="col-1 grid end"></div> ${col.repeat(10)} <div class="col-1 grid end"></div>`);
 			$('#display').append(col);
 			for (var i = 0; i < this.wordArray.length; i++) {
 				if (i === 10) {
@@ -66,26 +52,57 @@ $(function () {
 					$('#display').append(`<div class="col-1 grid ${this.wordArray[i]}" data-letter="${this.wordArray[i]}" id="letter"></div>`);
 				}
 			}//for loop to generate game board
-				if (this.wordArray.length < 10 ) {
-					$('#display').append(col.repeat(23-this.wordArray.length));
-				} else {
-					$('#display').append(col.repeat(21-this.wordArray.length));
-				}
-				
-				
-		/////////////////////End of Board Game Generation/////////////////////
-			//Add Keyboard
+			if (this.wordArray.length < 10 ) {
+				$('#display').append(col.repeat(23-this.wordArray.length));
+			} else {
+				$('#display').append(col.repeat(21-this.wordArray.length));
+			}
+		}
+
+		keyBoard() {
 			$('#keyboard').html('');
 			for (var i = 0; i < this.letterArray.length; i++) {
 				$('#keyboard').append(`
 					<div class="col">
-						<button type="button" class="btn btn-amber key" id="${this.letterArray[i]}" data-letter="${this.letterArray[i]}">${this.letterArray[i]}
-						</button>
+						<button type="button" class="btn btn-amber key" id="${this.letterArray[i]}" data-letter="${this.letterArray[i]}">${this.letterArray[i]}</button>
 					</div>
 				`);//keyboard append
 			} //for loop
-			//Add Guess input and Hint button
-	
+			//Add Guess input and Hint button	
+		}//Keyboard function
+
+		coinModal() {
+			$('#remote-container').html(`
+					<div class="modal fade" id="coinModal" tabindex="-1" role="dialog" aria-hidden="true">
+				    <div class="modal-dialog" role="document">
+				        <div class="modal-content">
+				        	<div class="modal-header">
+		                <h5 class="modal-title coin-title">Let's see who goes first</h5>
+			            </div>
+			            <div class="coin-button">
+					          <button id="coin" class="btn btn-danger">Click Me</button>  
+			            </div>
+				        </div>
+				    </div>
+				</div>`);
+			$('#coinModal').modal('show');
+		}//who's going first?
+
+		///////////////////Functions//////////////////////////
+		
+		letsPlay() { ///This sets up the next puzzle
+	    ////////////////Game Setter//////////////
+			if (this.game_count === null) {
+				this.game_count = 0;
+				this.cash = 0;
+				this.playerA = 1000;
+				this.playerB = 1000;
+			}//Game setter
+			
+			this.gameBoard();	
+			this.keyBoard();
+				
+			/////////////////////End of Board Game Generation/////////////////////
 			//Add Players
 			if (this.game_count === 0) {
 				this.nameA = prompt('Player 1, what\'s your name?');
@@ -107,8 +124,10 @@ $(function () {
 		        </div>
 			`);//player displays
 			if (this.spinCount === null) {
+				this.coinModal();
+				console.log('there should be a remote container');
 				$('#turn').html(`
-					<button id="coin" class="btn btn-danger flipOutX">Flip me</button>
+					<button id="coin" class="btn btn-danger">Click me to see who goes first</button>
 				`);
 			} else {
 				$('#gamePlay').html(`
@@ -116,14 +135,10 @@ $(function () {
 					<div id="value" class="spinner">$${this.cash}</div>
 				`);//spinner	
 			}//spin setter
-			console.log(this.game_count);
-			console.log(this.puzzle_words[0].word);
-			console.log(this.wordArray);
 		}//letsPlay
 
 
 		guessLetter(letter) {
-			
 			if (this.spinner === undefined){
 				alert('Flip a coin to see who goes first');
 			} else {
@@ -266,10 +281,9 @@ $(function () {
 		}//nextWord
 
 		getValue() {
-	        if (this.spinCount === 1) {
-
-	        } else {
-		        this.cashValues = [5000, 600, 500, 300, 500, 800, 550, 400, 300, 900, 500, 300, 900, 0, 600, 400, 300, 800, 350, 450, 700, 300, 600, 'Bankrupt'];
+      if (this.spinCount === 1) {} 
+      else {
+        this.cashValues = [5000, 600, 500, 300, 500, 800, 550, 400, 300, 900, 500, 300, 900, 0, 600, 400, 300, 800, 350, 450, 700, 300, 600, 'Bankrupt'];
 				this.cash = this.cashValues[Math.floor(Math.random()*this.cashValues.length)];
 				if (this.cash === 'Bankrupt') {
 					this.cash = 0;
@@ -290,11 +304,13 @@ $(function () {
 			let spinnerArray = ['a_spinner', 'b_spinner'];
 			let spinner = spinnerArray[Math.floor(Math.random()*spinnerArray.length)];
 			this.spinner = spinner;
+			console.log(spinner);
 			if (spinner === 'a_spinner') {
-				$('#turn').html(`${this.nameA} goes first!`);
+				$('#turn,.coin-title').html(`${this.nameA} goes first!`);
 			} else {
-				$('#turn').html(`${this.nameB} goes first!`);
+				$('#turn,.coin-title').html(`${this.nameB} goes first!`);
 			}//alert
+			$('.coin-button').html('<button class="btn btn-danger modal-close">Close</button>');
 			$('#gamePlay').html(`
 				<button id="${this.spinner}" class="btn btn-success spinner">Spin The Wheel</button>
 				<div id="value" class="spinner">$${this.cash}</div>
@@ -311,8 +327,8 @@ $(function () {
 	});
 	////Play Button////
 	$(document).on('click', '#play', function(){
-		$('#game-board').hide();
 		wheel.letsPlay();
+		$('#play').hide();
 	});
 	////letter guesser///
 	$(document).on('click', '.key', function(){
@@ -340,6 +356,10 @@ $(function () {
 	//////coin flip/////
 	$(document).on('click', '#coin', function() {
 		wheel.coinFlip();
+	});
+	//////modal trigger///////
+	$(document).on('click', '.modal-close', function() {
+		$('.modal').modal('hide');
 	});
 
 
